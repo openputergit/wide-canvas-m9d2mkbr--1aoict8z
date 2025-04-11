@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday Grisha (Motu) 🎂</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #fce4ec 0%, #f3e5f5 100%);
+        }
+        .cursive {
+            font-family: 'Dancing Script', cursive;
+        }
+        .floating {
+            animation: float 3s ease-in-out infinite;
+        }
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+        .heart {
+            animation: heartbeat 1.5s ease-in-out infinite;
+        }
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        .flower {
+            position: fixed;
+            pointer-events: none;
+            animation: fall 10s linear infinite;
+        }
+        @keyframes fall {
+            to { transform: translateY(100vh); opacity: 0; }
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <div id="flowers"></div>
+    <audio id="bgMusic" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Welcome Section -->
+    <section class="min-h-screen flex flex-col items-center justify-center text-center p-4">
+        <h1 class="cursive text-5xl md:text-7xl mb-6 text-pink-600 floating">
+            Happy Birthday Motu! 🎂
+        </h1>
+        <div id="countdown" class="text-2xl text-purple-600 mb-8"></div>
+        <button onclick="toggleMusic()" class="bg-pink-500 text-white px-6 py-2 rounded-full hover:bg-pink-600 transition-colors">
+            <i class="bi bi-music-note-beamed"></i> Play Music
+        </button>
+    </section>
+
+    <!-- Personal Message -->
+    <section class="max-w-4xl mx-auto p-6 bg-white/80 rounded-lg shadow-lg m-4">
+        <h2 class="cursive text-4xl text-pink-600 mb-6">Dear Grisha,</h2>
+        <p class="text-gray-700 leading-relaxed mb-4">
+            My dearest Motu, where do I even begin? You've been such an incredible presence in my life. Your smile lights up even the darkest days, and your laughter is my favorite melody. Today, on your special day, I want you to know just how much you mean to me.
+        </p>
+        <p class="text-gray-700 leading-relaxed mb-4">
+            You're not just my best friend; you're my sister from another mother, my partner in crime, and my constant source of joy. The way you care for others, your infectious enthusiasm, and your beautiful heart make you truly special.
+        </p>
+    </section>
+
+    <!-- Gallery -->
+    <section class="max-w-6xl mx-auto p-6 my-8">
+        <h2 class="cursive text-4xl text-center text-pink-600 mb-8">Our Memories Together</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <img src="https://source.unsplash.com/400x400/?celebration" class="w-full h-64 object-cover rounded-lg shadow-lg hover:scale-105 transition-transform" alt="Memory 1">
+            <img src="https://source.unsplash.com/400x400/?birthday" class="w-full h-64 object-cover rounded-lg shadow-lg hover:scale-105 transition-transform" alt="Memory 2">
+            <img src="https://source.unsplash.com/400x400/?party" class="w-full h-64 object-cover rounded-lg shadow-lg hover:scale-105 transition-transform" alt="Memory 3">
+        </div>
+    </section>
+
+    <!-- Reasons Why You're Special -->
+    <section class="max-w-4xl mx-auto p-6 bg-white/80 rounded-lg shadow-lg m-4">
+        <h2 class="cursive text-4xl text-center text-pink-600 mb-8">10 Reasons Why You're Amazing</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="p-4 bg-pink-50 rounded-lg">
+                <p class="text-gray-700">1. Your infectious laughter that brightens everyone's day</p>
+            </div>
+            <div class="p-4 bg-pink-50 rounded-lg">
+                <p class="text-gray-700">2. Your caring heart and endless compassion</p>
+            </div>
+            <!-- Add more reasons similarly -->
+        </div>
+    </section>
+
+    <!-- Memory Wall -->
+    <section class="max-w-4xl mx-auto p-6 bg-white/80 rounded-lg shadow-lg m-4 mb-20">
+        <h2 class="cursive text-4xl text-center text-pink-600 mb-8">Memory Wall</h2>
+        <div id="memories" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6"></div>
+        <form id="memoryForm" class="space-y-4">
+            <input type="text" id="name" placeholder="Your Name" class="w-full p-2 rounded border" required>
+            <textarea id="message" placeholder="Write your message..." class="w-full p-2 rounded border h-32" required></textarea>
+            <button type="submit" class="bg-pink-500 text-white px-6 py-2 rounded-full hover:bg-pink-600 transition-colors">
+                Add Memory
+            </button>
+        </form>
+    </section>
+
+    <footer class="text-center p-8 text-pink-600">
+        <p class="cursive text-3xl heart">You'll always be my favorite person, Motu ❤️</p>
+    </footer>
+
+    <script>
+        // Countdown Timer
+        function updateCountdown() {
+            const birthday = new Date('May 30, 2025 00:00:00').getTime();
+            const now = new Date().getTime();
+            const distance = birthday - now;
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById('countdown').innerHTML = 
+                `${days}d ${hours}h ${minutes}m ${seconds}s until your birthday!`;
+        }
+        setInterval(updateCountdown, 1000);
+
+        // Confetti
+        confetti({
+            particleCount: 100,
+            spread: 70,
+            origin: { y: 0.6 }
+        });
+
+        // Floating Flowers
+        function createFlower() {
+            const flower = document.createElement('div');
+            flower.innerHTML = '🌸';
+            flower.classList.add('flower');
+            flower.style.left = Math.random() * 100 + 'vw';
+            flower.style.animationDuration = Math.random() * 2 + 8 + 's';
+            document.getElementById('flowers').appendChild(flower);
+            setTimeout(() => flower.remove(), 10000);
+        }
+        setInterval(createFlower, 300);
+
+        // Background Music
+        let isPlaying = false;
+        const music = document.getElementById('bgMusic');
+        function toggleMusic() {
+            if (isPlaying) {
+                music.pause();
+                isPlaying = false;
+            } else {
+                music.play();
+                isPlaying = true;
+            }
+        }
+
+        // Memory Wall
+        const memoryForm = document.getElementById('memoryForm');
+        const memories = document.getElementById('memories');
+
+        memoryForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('name').value;
+            const message = document.getElementById('message').value;
+
+            const memoryDiv = document.createElement('div');
+            memoryDiv.className = 'p-4 bg-pink-50 rounded-lg';
+            memoryDiv.innerHTML = `
+                <p class="font-semibold">${name}</p>
+                <p class="text-gray-700">${message}</p>
+            `;
+            memories.appendChild(memoryDiv);
+
+            memoryForm.reset();
+        });
+    </script>
+<script>document.body.addEventListener('wheel', e => { if (!e.ctrlKey) return; e.preventDefault(); return }, { passive: false })</script>
+	</body>
+</html>
